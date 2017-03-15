@@ -29,6 +29,7 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         html = '''
         <html>
             <head>
+                <link rel="shortcut icon" href="https://github.com/vdvran/Alvaro-Roman.git
                 <title>OpenFDA app</title>
             </head>
             <body>
@@ -62,6 +63,7 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         events = json.loads(data)
         #event = events['results'][0]['patient']['drug']
         return events
+
     def get_medicinalproduct(self,com_num):
         conn = http.client.HTTPSConnection(self.OPENFDA_API_URL)
         conn.request("GET", self.OPENFDA_API_EVENT + '?search=companynumb:'+com_num+'&limit=10')
@@ -70,7 +72,6 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         data1 = r1.read()
         data = data1.decode('utf8')
         events = json.loads(data)
-      
         return events
 
     def get_event(self):
@@ -84,12 +85,13 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         events = json.loads(data)
         #event = events['results'][0]['patient']['drug']
         return events
+
     def get_drug(self, events):
         medicamentos=[]
         for event in events['results']:
             medicamentos+=[event['patient']['drug'][0]['medicinalproduct']]
-
         return medicamentos
+
     def get_com_num(self, events):
         com_num=[]
         for event in events['results']:
@@ -129,12 +131,13 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             medicamentos = self.get_drug(events)
             html = self.drug_page(medicamentos)
             self.wfile.write(bytes(html,'utf8'))
+
         elif self.path == '/receivecompany?':
             events = self.get_event()
             com_num = self.get_com_num(events)
             html = self.drug_page(com_num)
             self.wfile.write(bytes(html,'utf8'))
-           
+
         elif 'searchmed' in self.path:
             drug=self.path.split('=')[1]
             print (drug)
@@ -142,6 +145,7 @@ class testHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             com_num = self.get_com_num(events)
             html = self.drug_page(com_num)
             self.wfile.write(bytes(html,'utf8'))
+
         elif 'searchcom' in self.path:
             com_num = self.path.split('=')[1]
             print (com_num)
